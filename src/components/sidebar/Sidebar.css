@@ -1,0 +1,34 @@
+:root {
+  --animation-duration: 1.5s;
+}
+
+@keyframes off {
+  0% {
+    transform: translateX(0);
+    display: block;
+  }
+  100% {
+    transform: translateX(-100%);
+    display: none;
+  }
+}
+@keyframes on {
+  0% {
+    transform: translateX(-100%);
+    display: none;
+  }
+  100% {
+    transform: translateX(0);
+    display: block;
+  }
+}
+
+.sidebar_panel-hide {
+  animation: off;
+  animation-duration: var(--animation-duration);
+}
+
+.sidebar_panel-show {
+  animation: on;
+  animation-duration: var(--animation-duration);
+}
