@@ -18,18 +18,18 @@ export default function RootLayout({
   return (
     <html lang="tr">
       <body className="relative">
-        <AuthProvider>
-          <ModalProvider>
-            <AlertProvider>
+        <AlertProvider>
+          <AuthProvider>
+            <ModalProvider>
               <div className="flex flex-row h-screen w-screen">
                 <div className="w-1/5 min-w-[200px] h-screen">
                   <SidebarPanel />
                 </div>
                 <div className="w-4/5 py-3 px-5">{children}</div>
               </div>
-            </AlertProvider>
-          </ModalProvider>
-        </AuthProvider>
+            </ModalProvider>
+          </AuthProvider>
+        </AlertProvider>
       </body>
     </html>
   );

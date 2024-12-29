@@ -5,13 +5,7 @@ import AlertReducer, {
   AlertType,
 } from "@/reducers/AlertReducer";
 import { v4 as uuidv4 } from "uuid";
-import {
-  useContext,
-  createContext,
-  ReactNode,
-  useReducer,
-  useEffect,
-} from "react";
+import { useContext, createContext, ReactNode, useReducer } from "react";
 
 export type AlertContextType = {
   create: (message: string, type: AlertType, seconds: number) => void;
@@ -69,7 +63,19 @@ export default function AlertProvider({ children }: { children: ReactNode }) {
         }}
       >
         {alerts.map((a, i) => {
-          return <Alert key={i} type={a.type} message={a.message} />; // TODO alert yerleştirme.
+          return (
+            <Alert
+              key={i}
+              type={a.type}
+              message={a.message}
+              onCloseClick={() => {
+                dispatch({
+                  type: "delete",
+                  alert: a,
+                });
+              }}
+            />
+          );
         })}
       </div>
       {children}
