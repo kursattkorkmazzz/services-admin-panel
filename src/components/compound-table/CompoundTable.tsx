@@ -12,16 +12,22 @@ export type CompoundTableProps = {
   headers: ReactNode[];
   onNextClick: () => void;
   onBeforeClick: () => void;
+  defaultRowItem?: ReactNode;
 };
 
 export default function CompoundTable(props: CompoundTableProps) {
   const totalPage = Math.ceil(props.total / props.pageSize);
-
   return (
     <>
       <Table>
         <TableHeader data={props.headers} />
-        <TableBody data={props.rows} />
+        {props.defaultRowItem ? (
+          <tr className="text-center text-sm bg-white text-primary">
+            <td colSpan={props.headers.length}>{props.defaultRowItem}</td>
+          </tr>
+        ) : (
+          <TableBody data={props.rows} />
+        )}
       </Table>
       <FetchNavigation
         currentPage={props.currentPage}

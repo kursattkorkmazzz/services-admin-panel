@@ -13,7 +13,6 @@ const IconButtonTheme = cva(
 
 export default function IconButton(props: IconButtonProps) {
   const { strokeWidth, Icon, ...buttonProps } = props;
-
   return (
     <button {...buttonProps} className={cx(IconButtonTheme(), props.className)}>
       <Icon strokeWidth={strokeWidth} />

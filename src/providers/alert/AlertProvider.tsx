@@ -28,7 +28,7 @@ export const useAlertContext = () => {
 export default function AlertProvider({ children }: { children: ReactNode }) {
   const [alerts, dispatch] = useReducer(AlertReducer, []);
 
-  const create = (message: string, type: AlertType, seconds: number) => {
+  const create = (message: string, type: AlertType, seconds: number = 3) => {
     const alert: AlertArrayItemType = {
       _id: uuidv4(),
       message: message,
