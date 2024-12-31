@@ -33,8 +33,6 @@ export async function UpdateRoleAction(
   role: Partial<Role>,
   access_token: string
 ): Promise<ResponseType> {
-  console.log(role);
-  
   try {
     const body: string = JSON.stringify({
       name: role.name,
@@ -60,6 +58,60 @@ export async function UpdateRoleAction(
     const result = await response.json();
 
     return Promise.resolve(result);
+  } catch (e: any) {
+    throw ActionsErrorHandler(e);
+  }
+}
+
+export async function DeleteRoleAction(
+  role_id: string,
+  access_token: string
+): Promise<ResponseType> {
+  try {
+    if (!role_id) {
+      Promise.reject("Role id is required");
+    }
+
+    const response: Response = await fetch(
+      RoleService.delete_role + `/${role_id}`,
+      {
+        method: "DELETE",
+        headers: {
+          ["Content-Type"]: "application/json",
+          ["Authorization"]: `Bearer ${access_token}`,
+        },
+      }
+    );
+
+    const result = await response.json();
+    return Promise.resolve(result);
+  } catch (e: any) {
+    throw ActionsErrorHandler(e);
+  }
+}
+
+export type RoleCreateType = Partial<Pick<Role, "description">> &
+  Pick<Role, "name">;
+export async function CreateRoleAction(
+  role: RoleCreateType,
+  access_token: string
+): Promise<ResponseType> {
+  try {
+    const body: string = JSON.stringify({
+      name: role.name,
+      description: role.description,
+    });
+
+    const response: Response = await fetch(RoleService.add_role, {
+      method: "POST",
+      headers: {
+        ["Content-Type"]: "application/json",
+        ["Authorization"]: `Bearer ${access_token}`,
+      },
+      body,
+    });
+
+    return await response.json();
   } catch (e: any) {
     throw ActionsErrorHandler(e);
   }

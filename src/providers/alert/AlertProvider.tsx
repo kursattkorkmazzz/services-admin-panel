@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useContext, createContext, ReactNode, useReducer } from "react";
 
 export type AlertContextType = {
-  create: (message: string, type: AlertType, seconds: number) => void;
+  create: (message: string, type: AlertType, seconds?: number) => void;
 };
 
 const AlertContext = createContext<AlertContextType | null>(null);

@@ -1,6 +1,12 @@
 "use client";
 
-import { GetRolesAction, UpdateRoleAction } from "@/actions/role/RoleActions";
+import {
+  CreateRoleAction,
+  DeleteRoleAction,
+  GetRolesAction,
+  RoleCreateType,
+  UpdateRoleAction,
+} from "@/actions/role/RoleActions";
 import ResponseType from "@/lib/ResponseType";
 import { useContext, useEffect, useState } from "react";
 import IconButton from "../iconbutton/IconButton";
@@ -9,10 +15,12 @@ import Subheader from "../page/header/Subheader";
 import CompoundTable from "../compound-table/CompoundTable";
 import NotAuthorizedPage from "../not-authorized/NotAuthorizedPage";
 import { ModalContext } from "@/providers/modal/ModalProvider";
-import RoleEditPage from "./RoleEditPage";
 import { Role, RoleArray } from "@/types/RoleTypes";
 import { FieldValues } from "react-hook-form";
 import { useAlertContext } from "@/providers/alert/AlertProvider";
+import RoleAddAndEditPage from "./RoleAddAndEditPage";
+import Button from "../button/Button";
+import UIErrorHandler from "@/lib/error/UIErrorHandler";
 
 export default function ViewRolesPage() {
   const [page, setPage] = useState<number>(1);
@@ -87,14 +95,20 @@ export default function ViewRolesPage() {
   const getOperationButtons = (role: Role) => {
     return (
       <div className="flex flex-row gap-3">
-        <IconButton strokeWidth={1} Icon={ClipboardList} />
+        <IconButton
+          strokeWidth={1}
+          Icon={ClipboardList}
+          onClick={() => {
+            console.log(role.name + " will be view.");
+          }}
+        />
         <IconButton
           strokeWidth={1}
           Icon={PencilLine}
           className="text-yellow-400"
           onClick={() => {
             modalContext.setModal(
-              <RoleEditPage
+              <RoleAddAndEditPage
                 role={role}
                 editMode
                 onSubmitHandler={(data) => {
@@ -106,7 +120,14 @@ export default function ViewRolesPage() {
             modalContext.showModal();
           }}
         />
-        <IconButton strokeWidth={1} Icon={Trash2} className="text-red-400" />
+        <IconButton
+          strokeWidth={1}
+          Icon={Trash2}
+          className="text-red-400"
+          onClick={() => {
+            deleteRoleHandler(role);
+          }}
+        />
       </div>
     );
   };
@@ -127,7 +148,7 @@ export default function ViewRolesPage() {
           alertContext.create("Rol başarıyla güncellendi.", "success", 3);
           getRoles();
         }
-        if (response.error === "Permission denied.") {
+        if (UIErrorHandler.isPermissionError(response)) {
           alertContext.create(
             "Rol güncelleme için gerekli yetkiniz bulunmamaktadır.",
             "error",
@@ -140,9 +161,81 @@ export default function ViewRolesPage() {
       });
   }
 
+  // Rol silme işlemlerini ele alır.
+  function deleteRoleHandler(role: Role) {
+    console.log(role.name + " will be delete.");
+    DeleteRoleAction(role.id, localStorage.getItem("access_token") || "")
+      .then((response: ResponseType) => {
+        if (response.data) {
+          alertContext.create("Rol başarıyla silindi.", "success", 3);
+          getRoles();
+        }
+        if (UIErrorHandler.isPermissionError(response)) {
+          alertContext.create(
+            "Rol silme için gerekli yetkiniz bulunmamaktadır.",
+            "error"
+          );
+        }
+        if (
+          response.error === "This role cannot be delete. It is restricted."
+        ) {
+          alertContext.create(
+            "Bu rol silinemez. Sistem tarafından engellenmektedir.",
+            "error"
+          );
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }
+
+  function createRoleHandler(role: RoleCreateType) {
+    modalContext.hideModal();
+    CreateRoleAction(role, localStorage.getItem("access_token") || "")
+      .then((response) => {
+        if (UIErrorHandler.isPermissionError(response)) {
+          alertContext.create(
+            "Rol oluşturma için yetkiniz bulunmamaktadır.",
+            "error"
+          );
+          return;
+        }
+        if (response.data) {
+          alertContext.create("Rol başarıyla oluşturuldu.", "success", 3);
+          getRoles();
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }
+
   return (
     <>
       <Subheader>Rol Listesi</Subheader>
+      <div className="w-full flex justify-end">
+        <Button
+          variant={"successfully"}
+          onClick={() => {
+            modalContext.setModal(
+              <RoleAddAndEditPage
+                editMode={false}
+                onSubmitHandler={(data) => {
+                  createRoleHandler({
+                    name: data.role_name,
+                    description: data.role_description,
+                  });
+                }}
+              />
+            );
+            modalContext.setModalHeader("Rol Oluşturma");
+            modalContext.showModal();
+          }}
+        >
+          Yeni Rol Oluştur
+        </Button>
+      </div>
       {isReadRolePermission ? (
         <CompoundTable
           currentPage={page}

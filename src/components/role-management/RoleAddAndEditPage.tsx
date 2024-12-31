@@ -10,7 +10,7 @@ export type RoleEditPageProps = {
   onSubmitHandler?: (data: FieldValues) => void;
 };
 
-export default function RoleEditPage(props: RoleEditPageProps) {
+export default function RoleAddAndEditPage(props: RoleEditPageProps) {
   const [isEditMode, setIsEditMode] = useState<boolean>(
     props.editMode || false
   );
