@@ -13,7 +13,14 @@ export default function Layout({
         title="Kullanıcı Yönetimi"
         description="Kullanıcılarınızı görünteleyebilir, bilgilerini düzenleyebilir ve kaldırabilirsiniz."
       />
-      <Breadcrumb />
+      <Breadcrumb
+        pathConditions={[
+          {
+            name: "Kullanıcı Yönetimi",
+            path: "user-management",
+          },
+        ]}
+      />
       {children}
     </Page>
   );

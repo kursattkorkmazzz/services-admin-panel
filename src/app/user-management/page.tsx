@@ -1,7 +1,7 @@
 export default function UserManagementPage() {
   return (
     <>
-      <p>User Yönetimi</p>
+      <p>Kullanıcı Yönetimi</p>
     </>
   );
 }

@@ -40,7 +40,7 @@ export default function UserRoleManage() {
     return (
       <div className="flex flex-row gap-3">
         <IconButton
-          strokeWidth={1}
+          strokeWidth={1.5}
           Icon={PencilLine}
           className="text-yellow-400"
           onClick={() => {
