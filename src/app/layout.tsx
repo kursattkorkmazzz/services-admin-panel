@@ -25,7 +25,9 @@ export default function RootLayout({
                 <div className="w-1/5 min-w-[200px] h-screen">
                   <SidebarPanel />
                 </div>
-                <div className="w-4/5 py-3 px-5">{children}</div>
+                <div className="w-4/5 py-3 px-5 overflow-x-hidden overflow-y-scroll ">
+                  {children}
+                </div>
               </div>
             </ModalProvider>
           </AuthProvider>

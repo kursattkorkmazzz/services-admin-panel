@@ -1,8 +1,8 @@
+import RoleCrudForm from "@/components/forms/RoleCrudForm";
+import Inputfield from "@/components/input/Inputfield";
 import { Role } from "@/types/RoleTypes";
-import { useEffect, useState } from "react";
-import RoleCrudForm from "../forms/RoleCrudForm";
+import { useState } from "react";
 import { FieldValues } from "react-hook-form";
-import Inputfield from "../input/Inputfield";
 
 export type RoleEditPageProps = {
   role?: Role;

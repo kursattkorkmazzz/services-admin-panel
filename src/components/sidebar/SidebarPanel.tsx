@@ -41,17 +41,14 @@ export default function SidebarPanel() {
         <SidebarButton href={"/"} pathSelector="/">
           Hoşgeldiniz
         </SidebarButton>
-        <SidebarButton
-          href={"/role-management"}
-          pathSelector="/role-management"
-        >
+        <SidebarButton href={"/role-management"} pathSelector="role-management">
           Rol ve Yetki Yönetimi
         </SidebarButton>
-        <SidebarButton href={"/"} pathSelector="/team-member">
-          Ekip Üyeleri
+        <SidebarButton href={"/user-management"} pathSelector="user-management">
+          Kullanıcı Yönetimi
         </SidebarButton>
         <div className="h-full w-1" />
-        <SidebarButton href={""} pathSelector="/exit" onClick={logoutHandler}>
+        <SidebarButton href={""} pathSelector="exit" onClick={logoutHandler}>
           Çıkış Yap
         </SidebarButton>
       </div>

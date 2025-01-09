@@ -13,17 +13,18 @@ export async function CheckPermission(
   operation_codes: string[]
 ): Promise<ResponseType> {
   try {
-    const response: Response = await fetch(AuthService.login_uri, {
+    const body = JSON.stringify({
+      operation_code:
+        operation_codes.length <= 1 ? operation_codes[0] : operation_codes,
+    });
+    const response: Response = await fetch(AuthService.check_permission_uri, {
       method: "POST",
       headers: {
         ["Content-Type"]: "application/json",
-        ["Authorization"]: access_token,
+        ["Authorization"]: "Bearer " + access_token,
       },
-      body: JSON.stringify({
-        operation_code: operation_codes,
-      }),
+      body: body,
     });
-
     const result = await response.json();
     return Promise.resolve(result);
   } catch (e: any) {

@@ -6,21 +6,47 @@ import RoleService from "@/services/RoleService";
 import { Role } from "@/types/RoleTypes";
 
 export async function GetRolesAction(
-  page: number,
-  limit: number,
-  access_token: string
+  access_token: string,
+  page?: number,
+  limit?: number
 ): Promise<ResponseType> {
   try {
-    const response: Response = await fetch(
-      RoleService.get_role_s_service + `?page=${page || 0}&limit=${limit || 5}`,
-      {
-        method: "GET",
-        headers: {
-          ["Content-Type"]: "application/json",
-          ["Authorization"]: `Bearer ${access_token}`,
-        },
-      }
-    );
+    let uri = RoleService.get_role_s_service;
+    if (page && limit) {
+      uri += `?page=${page || 0}&limit=${limit || 5}`;
+    }
+    const response: Response = await fetch(uri, {
+      method: "GET",
+      headers: {
+        ["Content-Type"]: "application/json",
+        ["Authorization"]: `Bearer ${access_token}`,
+      },
+    });
+
+    const result = await response.json();
+    return Promise.resolve(result);
+  } catch (e: any) {
+    throw ActionsErrorHandler(e);
+  }
+}
+
+export async function GetRolesOfUserAction(
+  access_token: string,
+  page?: number,
+  limit?: number
+): Promise<ResponseType> {
+  try {
+    let uri = RoleService.get_role_s_service;
+    if (page && limit) {
+      uri += `?page=${page || 0}&limit=${limit || 5}`;
+    }
+    const response: Response = await fetch(uri, {
+      method: "GET",
+      headers: {
+        ["Content-Type"]: "application/json",
+        ["Authorization"]: `Bearer ${access_token}`,
+      },
+    });
 
     const result = await response.json();
     return Promise.resolve(result);
@@ -112,6 +138,56 @@ export async function CreateRoleAction(
     });
 
     return await response.json();
+  } catch (e: any) {
+    throw ActionsErrorHandler(e);
+  }
+}
+
+export async function AddRoleToUserAction(
+  role_id: string,
+  user_id: string,
+  access_token: string
+): Promise<ResponseType> {
+  try {
+    const response: Response = await fetch(
+      RoleService.add_role_to_user + `/${role_id}/user/${user_id}`,
+      {
+        method: "POST",
+        headers: {
+          ["Content-Type"]: "application/json",
+          ["Authorization"]: `Bearer ${access_token}`,
+        },
+      }
+    );
+
+    const result = await response.json();
+
+    return Promise.resolve(result);
+  } catch (e: any) {
+    throw ActionsErrorHandler(e);
+  }
+}
+
+export async function DeleteRoleFromUserAction(
+  role_id: string,
+  user_id: string,
+  access_token: string
+): Promise<ResponseType> {
+  try {
+    const response: Response = await fetch(
+      RoleService.delete_role_from_user + `/${role_id}/user/${user_id}`,
+      {
+        method: "DELETE",
+        headers: {
+          ["Content-Type"]: "application/json",
+          ["Authorization"]: `Bearer ${access_token}`,
+        },
+      }
+    );
+
+    const result = await response.json();
+
+    return Promise.resolve(result);
   } catch (e: any) {
     throw ActionsErrorHandler(e);
   }

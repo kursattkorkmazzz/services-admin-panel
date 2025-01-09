@@ -5,3 +5,4 @@ export type Role = {
 };
 
 export type RoleArray = Role[];
+export type RoleChangeType = Role & { isUserHas: boolean };

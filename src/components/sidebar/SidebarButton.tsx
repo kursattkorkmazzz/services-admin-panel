@@ -3,7 +3,7 @@ import { cva, cx, VariantProps } from "class-variance-authority";
 import { LockIcon } from "lucide-react";
 import Link, { LinkProps } from "next/link";
 import { usePathname } from "next/navigation";
-import { HtmlHTMLAttributes, ReactNode } from "react";
+import { HtmlHTMLAttributes, ReactNode, useEffect, useState } from "react";
 
 // Themming
 const SidebarButtonTheme = cva("p-2 rounded-sm  cursor-pointer", {
@@ -36,8 +36,12 @@ export type ButtonProps = LinkProps &
   };
 export default function SidebarButton(props: ButtonProps) {
   const { pathSelector, disabled, hoverEffect, status, ...buttonProps } = props;
-
+  const [paths, setPaths] = useState<string[]>([]);
   const pathname = usePathname();
+
+  useEffect(() => {
+    setPaths(pathname.split("/"));
+  }, [pathname]);
 
   return (
     <Link
@@ -45,7 +49,8 @@ export default function SidebarButton(props: ButtonProps) {
       className={cx(
         SidebarButtonTheme({
           hoverEffect: disabled ? false : hoverEffect,
-          status: pathSelector === pathname ? "active" : status,
+          status:
+            pathSelector && paths.includes(pathSelector) ? "active" : status,
           disabled: disabled,
         }),
         props.classname

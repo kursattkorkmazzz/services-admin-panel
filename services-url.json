@@ -1,4 +1,6 @@
 {
   "auth_service": "http://localhost:3000/authn",
-  "role_service": "http://localhost:3000/role-service"
+  "authz_service": "http://localhost:3000/authz",
+  "role_service": "http://localhost:3000/role-service",
+  "user_service": "http://localhost:3000/user-service"
 }

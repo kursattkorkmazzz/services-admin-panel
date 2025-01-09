@@ -1,5 +1,12 @@
 "use client";
-
+import Button from "@/components/button/Button";
+import CompoundTable from "@/components/compound-table/CompoundTable";
+import NotAuthorizedPage from "@/components/not-authorized/NotAuthorizedPage";
+import Subheader from "@/components/page/header/Subheader";
+import { useContext, useEffect, useState } from "react";
+import { Role, RoleArray } from "@/types/RoleTypes";
+import { useAlertContext } from "@/providers/alert/AlertProvider";
+import { ModalContext } from "@/providers/modal/ModalProvider";
 import {
   CreateRoleAction,
   DeleteRoleAction,
@@ -8,21 +15,14 @@ import {
   UpdateRoleAction,
 } from "@/actions/role/RoleActions";
 import ResponseType from "@/lib/ResponseType";
-import { useContext, useEffect, useState } from "react";
-import IconButton from "../iconbutton/IconButton";
+import IconButton from "@/components/iconbutton/IconButton";
 import { ClipboardList, PencilLine, Trash2 } from "lucide-react";
-import Subheader from "../page/header/Subheader";
-import CompoundTable from "../compound-table/CompoundTable";
-import NotAuthorizedPage from "../not-authorized/NotAuthorizedPage";
-import { ModalContext } from "@/providers/modal/ModalProvider";
-import { Role, RoleArray } from "@/types/RoleTypes";
 import { FieldValues } from "react-hook-form";
-import { useAlertContext } from "@/providers/alert/AlertProvider";
-import RoleAddAndEditPage from "./RoleAddAndEditPage";
-import Button from "../button/Button";
 import UIErrorHandler from "@/lib/error/UIErrorHandler";
+import RoleAddAndEditPage from "../subpage-components/RoleAddAndEditSubpageComponent";
+import { useRouter } from "next/navigation";
 
-export default function ViewRolesPage() {
+export default function RoleListSubpage() {
   const [page, setPage] = useState<number>(1);
   const [totalPage, setTotalPage] = useState<number>(0);
   const [limit, setLimit] = useState<number>(10);
@@ -35,21 +35,20 @@ export default function ViewRolesPage() {
 
   const alertContext = useAlertContext();
   const modalContext = useContext(ModalContext);
-
+  const router = useRouter();
   // Tüm rolleri çek. (Paging ve Limit işlemleri)
   const getRoles = () => {
     const access_token = localStorage.getItem("access_token") || "";
 
-    GetRolesAction(page, limit, access_token)
+    GetRolesAction(access_token, page, limit)
       .then((response: ResponseType) => {
         let isReadRolePermission = false;
-        if (response.error == "Permission denied.") {
+        if (UIErrorHandler.isPermissionError(response)) {
           isReadRolePermission = false;
         } else {
           isReadRolePermission = true;
         }
         setIsReadRolePermission(isReadRolePermission);
-
         if (response.data && isReadRolePermission) {
           const { page, pageSize, roles, total } = response.data;
 
@@ -98,8 +97,11 @@ export default function ViewRolesPage() {
         <IconButton
           strokeWidth={1}
           Icon={ClipboardList}
+          className="text-blue-300"
           onClick={() => {
-            console.log(role.name + " will be view.");
+            router.push(
+              `/role-management/role-permission-edit?role_id=${role.id}`
+            );
           }}
         />
         <IconButton
@@ -163,7 +165,6 @@ export default function ViewRolesPage() {
 
   // Rol silme işlemlerini ele alır.
   function deleteRoleHandler(role: Role) {
-    console.log(role.name + " will be delete.");
     DeleteRoleAction(role.id, localStorage.getItem("access_token") || "")
       .then((response: ResponseType) => {
         if (response.data) {
@@ -213,7 +214,10 @@ export default function ViewRolesPage() {
 
   return (
     <>
-      <Subheader>Rol Listesi</Subheader>
+      <Subheader
+        title="Rol Listesi"
+        description="Buradan tüm rollerin listesini görüntüleyebilir, düzenleyebilir, silebilir ve istediğiniz rollere yetki ataması yapabilirsiniz."
+      />
       <div className="w-full flex justify-end">
         <Button
           variant={"successfully"}
@@ -257,7 +261,7 @@ export default function ViewRolesPage() {
           total={total}
         />
       ) : (
-        <NotAuthorizedPage body="Rolleri görüntülemek için yetkiniz bulunmamaktadır." />
+        <NotAuthorizedPage />
       )}
     </>
   );
