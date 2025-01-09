@@ -16,7 +16,7 @@ export default function FetchNavigation(props: FetchNavigationProps) {
     Math.min(props.currentPage * props.pageSize, props.totalItem),
   ];
   return (
-    <div className="flex flex-col py-2 justify-center items-center text-white bg-primary gap-5">
+    <div className="flex flex-col py-2 justify-center items-center text-primary gap-5">
       <p className="text-xs font-light">
         {props.totalItem} taneden {range[0]}-{range[1]} arası görüntüleniyor.
       </p>

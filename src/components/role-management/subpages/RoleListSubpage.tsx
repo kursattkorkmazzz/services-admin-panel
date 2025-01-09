@@ -95,9 +95,9 @@ export default function RoleListSubpage() {
     return (
       <div className="flex flex-row gap-3">
         <IconButton
-          strokeWidth={1}
+          strokeWidth={1.5}
           Icon={ClipboardList}
-          className="text-blue-300"
+          className="text-blue-500"
           onClick={() => {
             router.push(
               `/role-management/role-permission-edit?role_id=${role.id}`
@@ -105,7 +105,7 @@ export default function RoleListSubpage() {
           }}
         />
         <IconButton
-          strokeWidth={1}
+          strokeWidth={1.5}
           Icon={PencilLine}
           className="text-yellow-400"
           onClick={() => {
@@ -123,9 +123,9 @@ export default function RoleListSubpage() {
           }}
         />
         <IconButton
-          strokeWidth={1}
+          strokeWidth={1.5}
           Icon={Trash2}
-          className="text-red-400"
+          className="text-red-500"
           onClick={() => {
             deleteRoleHandler(role);
           }}

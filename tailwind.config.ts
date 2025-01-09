@@ -21,6 +21,9 @@ export default {
         secondary: "#3E5879",
         accent: "#F72C5B",
       },
+      boxShadow: {
+        custom: "0px 0px 3px 0.00001px rgb(0,0,0,0.25)",
+      },
     },
   },
   plugins: [],

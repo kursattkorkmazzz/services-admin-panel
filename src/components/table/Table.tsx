@@ -5,7 +5,7 @@ export type TableProps = {
   children: React.ReactNode;
 };
 
-export const TableTheme = cva("w-full bg-primary rounded-sm text-white");
+export const TableTheme = cva("w-full text-primary shadow-custom");
 
 export default function Table(props: TableProps) {
   return (
