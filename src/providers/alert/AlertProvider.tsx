@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useContext, createContext, ReactNode, useReducer } from "react";
 
 export type AlertContextType = {
-  create: (message: string, type: AlertType, seconds: number) => void;
+  create: (message: string, type: AlertType, seconds?: number) => void;
 };
 
 const AlertContext = createContext<AlertContextType | null>(null);
@@ -28,7 +28,7 @@ export const useAlertContext = () => {
 export default function AlertProvider({ children }: { children: ReactNode }) {
   const [alerts, dispatch] = useReducer(AlertReducer, []);
 
-  const create = (message: string, type: AlertType, seconds: number) => {
+  const create = (message: string, type: AlertType, seconds: number = 3) => {
     const alert: AlertArrayItemType = {
       _id: uuidv4(),
       message: message,

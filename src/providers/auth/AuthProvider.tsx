@@ -4,15 +4,20 @@ import LoginPage from "@/app/login/page";
 import ResponseType from "@/lib/ResponseType";
 import { createContext, useEffect, useState } from "react";
 import { useAlertContext } from "../alert/AlertProvider";
+import { CheckPermission } from "@/actions/authorization/AuthorizationActions";
 
 type AuthContextType = {
   access_token: string | undefined;
   refresh_token: string | undefined;
+  checkPermission: (operation_codes: string[]) => Promise<any>;
 };
 
 export const AuthContext = createContext<AuthContextType>({
   access_token: undefined,
   refresh_token: undefined,
+  checkPermission: (op: string[]) => {
+    return Promise.reject(new Error("Not implemented yet."));
+  },
 });
 
 export default function AuthProvider({
@@ -62,11 +67,29 @@ export default function AuthProvider({
     }
   };
 
+  const checkPermission = async (operation_codes: string[]) => {
+    if (!access_token) {
+      checkAuthenticationHandler();
+      return;
+    }
+    const response: ResponseType = await CheckPermission(
+      access_token,
+      operation_codes
+    );
+
+    if (response.error) {
+      console.log(response.error);
+      return ["denied"];
+    }
+    return response.data.access;
+  };
+
   return (
     <AuthContext.Provider
       value={{
         access_token: access_token,
         refresh_token: refresh_token,
+        checkPermission,
       }}
     >
       {access_token && refresh_token ? children : <LoginPage />}

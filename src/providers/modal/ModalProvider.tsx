@@ -25,13 +25,15 @@ export default function ModalProvider({
   };
   const hideModal = () => {
     setIsOpen(false);
+    setModal(<></>);
+    setModalHeader(undefined);
   };
 
   const closeWhenClickBlackRegionHandler = () => {
-    setIsOpen(false);
+    showModal();
   };
   const onCloseButtonClickHandler = () => {
-    setIsOpen(false);
+    hideModal();
   };
 
   return (

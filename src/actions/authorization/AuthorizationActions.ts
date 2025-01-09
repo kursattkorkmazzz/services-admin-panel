@@ -8,23 +8,23 @@ type ResponseType = {
   data: any;
 };
 
-export async function LoginAction(
-  username: string,
-  password: string
+export async function CheckPermission(
+  access_token: string,
+  operation_codes: string[]
 ): Promise<ResponseType> {
   try {
-    const response: Response = await fetch(AuthService.login_uri, {
+    const body = JSON.stringify({
+      operation_code:
+        operation_codes.length <= 1 ? operation_codes[0] : operation_codes,
+    });
+    const response: Response = await fetch(AuthService.check_permission_uri, {
       method: "POST",
       headers: {
         ["Content-Type"]: "application/json",
-        ["Auth-Type"]: "password",
+        ["Authorization"]: "Bearer " + access_token,
       },
-      body: JSON.stringify({
-        username,
-        password,
-      }),
+      body: body,
     });
-
     const result = await response.json();
     return Promise.resolve(result);
   } catch (e: any) {

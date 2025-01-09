@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Inputfield from "../inputfield/Inputfield";
+import Inputfield from "../input/Inputfield";
 import { FieldValues, useForm } from "react-hook-form";
 import validator from "validator";
 import { LogInIcon } from "lucide-react";
