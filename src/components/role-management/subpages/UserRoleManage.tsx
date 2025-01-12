@@ -1,5 +1,6 @@
 "use client";
 import { GetAllUsersAction } from "@/actions/user/UserActions";
+import AvatarImage from "@/components/avatar-image/AvatarImage";
 import CompoundTable from "@/components/compound-table/CompoundTable";
 import IconButton from "@/components/iconbutton/IconButton";
 import NotAuthorizedPage from "@/components/not-authorized/NotAuthorizedPage";
@@ -62,17 +63,7 @@ export default function UserRoleManage() {
           headers={["Resim", "İsim", "Soyisim", "Email", "Roller", "İşlemler"]}
           rows={allUsers.map((user, i) => {
             return [
-              <Image
-                className="object-cover rounded-sm"
-                src={user.photo_url || "/images/no-img.jpg"}
-                alt="Kullanıcı resmi"
-                style={{
-                  width: "70px",
-                  height: "70px",
-                }}
-                width={70}
-                height={70}
-              />,
+              <AvatarImage photo_url={user.photo_url} />,
               user.firstname,
               user.lastname,
               user.email,

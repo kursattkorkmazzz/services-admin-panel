@@ -8,7 +8,7 @@ export type IconButtonProps = HtmlHTMLAttributes<HTMLButtonElement> & {
 };
 
 const IconButtonTheme = cva(
-  "w-min h-min bg-transparent rounded-full cursor-pointer"
+  "relative w-min h-min bg-transparent rounded-full cursor-pointer"
 );
 
 export default function IconButton(props: IconButtonProps) {
