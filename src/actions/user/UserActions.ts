@@ -110,7 +110,7 @@ export async function CreateNewUserAction(
       email: new_user.email,
       birth_date: new_user.birth_date || undefined,
       gender: new_user.gender,
-      photo_url: new_user.photo_url,
+      photo_url: new_user.photo_url || null,
       username: new_user.username,
       password: new_user.password,
     });

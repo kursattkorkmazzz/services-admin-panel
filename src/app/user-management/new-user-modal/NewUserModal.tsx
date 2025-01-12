@@ -10,7 +10,7 @@ import { useAlertContext } from "@/providers/alert/AlertProvider";
 import { ModalContext } from "@/providers/modal/ModalProvider";
 import { useContext, useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
-import { isAlphanumeric } from "validator";
+import { isAlphanumeric, isEmpty } from "validator";
 import isEmail from "validator/lib/isEmail";
 import isURL from "validator/lib/isURL";
 
@@ -21,6 +21,7 @@ export default function NewUserModal(props: NewUserModalProps) {
     register,
     formState: { errors },
     getValues,
+    setError,
   } = useForm();
   const [previwımageUrl, setPreviewImageUrl] = useState<string | undefined>();
   const alertContext = useAlertContext();
@@ -40,6 +41,16 @@ export default function NewUserModal(props: NewUserModalProps) {
           alertContext.create("Kullanıcı başarıyla oluşturuldu.", "success");
           props.onCreated?.();
           modalContext.hideModal();
+          return;
+        } else if (response.error === "Email already exist.") {
+          alertContext.create("Böyle bir email zaten var.", "warning");
+          setError("email", { message: "Böyle bir email zaten var." });
+          return;
+        } else if (response.error === "Username already exist.") {
+          alertContext.create("Böyle bir kullanıcı adı zaten var.", "warning");
+          setError("username", {
+            message: "Böyle bir kullanıcı adı zaten var.",
+          });
           return;
         }
         console.log(response);
@@ -146,7 +157,8 @@ export default function NewUserModal(props: NewUserModalProps) {
             setPreviewImageUrl(event.target.value);
           },
           validate: {
-            validURL: (v) => isURL(v) || "Geçerli bir URL giriniz.",
+            validURL: (v) =>
+              isURL(v) || isEmpty(v) || "Geçerli bir URL giriniz.",
           },
         })}
         type="text"

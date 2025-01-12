@@ -117,7 +117,6 @@ export default function ProfileModal(props: ProfileModalProps) {
       localStorage.getItem("access_token") || ""
     )
       .then((response) => {
-        console.log(response);
         if (UIErrorHandler.isPermissionError(response)) {
           alertContext.create(
             "Kullanıcı silmek için gerekli yetkiniz yok.",
@@ -148,7 +147,7 @@ export default function ProfileModal(props: ProfileModalProps) {
         />
       </div>
       <div className="flex justify-between items-end">
-        <div className="flex flex-col gap-2 items-center justify-center">
+        <div className="flex flex-col gap-2 justify-start">
           <p className="text-xs text-gray-500">
             Kayıt Tarihi: {DateParser(userInfo?.created_at)}
           </p>
