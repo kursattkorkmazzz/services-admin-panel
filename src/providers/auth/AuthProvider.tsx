@@ -1,5 +1,8 @@
 "use client";
-import { CheckSessionAction } from "@/actions/authentication/AuthentiationActions";
+import {
+  CheckSessionAction,
+  RefreshTokenAction,
+} from "@/actions/authentication/AuthentiationActions";
 import LoginPage from "@/app/login/page";
 import ResponseType from "@/lib/ResponseType";
 import { createContext, useEffect, useState } from "react";
@@ -50,12 +53,33 @@ export default function AuthProvider({
             set_access_token(access_token);
             set_refresh_token(refresh_token);
             alertContext.create("Giriş Başarılı. Hoşgeldiniz.", "success", 3);
+          } else if (value.data.status === "expired") {
+            RefreshTokenAction(refresh_token).then((response: ResponseType) => {
+              if (response.error) {
+                console.log(response.error);
+                return;
+              }
+              if (response.data.access_token) {
+                localStorage.setItem(
+                  "access_token",
+                  response.data.access_token
+                );
+                dispatchEvent(new StorageEvent("storage"));
+              } else {
+                set_access_token(undefined);
+                set_refresh_token(undefined);
+                dispatchEvent(new StorageEvent("storage"));
+                alertContext.create(
+                  "Oturum süreniz dolmuştur. Lütfen tekrar giriş yapınız.",
+                  "info",
+                  3
+                );
+              }
+            });
           } else {
-            alertContext.create(
-              "Oturum süreniz dolmuştur. Lütfen tekrar giriş yapınız.",
-              "info",
-              3
-            );
+            set_access_token(undefined);
+            set_refresh_token(undefined);
+            dispatchEvent(new StorageEvent("storage"));
           }
         })
         .catch((err: any) => {
