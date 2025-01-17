@@ -1,15 +1,16 @@
-import { ReactNode } from "react";
+import { ReactNode, TdHTMLAttributes } from "react";
 import FetchNavigation from "../fetch-navigation/FetchNavigation";
 import Table from "../table/Table";
 import TableBody from "../table/TableBody";
 import TableHeader from "../table/TableHeader";
 
 export type CompoundTableProps = {
+  rows: ReactNode[][];
+  headers: ReactNode[];
+  tdAttributes?: TdHTMLAttributes<HTMLTableCellElement>[] | undefined;
   currentPage?: number;
   pageSize?: number;
   total?: number;
-  rows: ReactNode[][];
-  headers: ReactNode[];
   onNextClick?: () => void;
   onBeforeClick?: () => void;
   noRowItem?: ReactNode;
@@ -21,6 +22,7 @@ export default function CompoundTable(props: CompoundTableProps) {
   if (props.total && props.pageSize) {
     totalPage = Math.ceil(props.total / props.pageSize);
   }
+
   return (
     <>
       <Table className={props.className}>
@@ -30,7 +32,7 @@ export default function CompoundTable(props: CompoundTableProps) {
             <td colSpan={props.headers.length}>{props.noRowItem}</td>
           </tr>
         ) : (
-          <TableBody data={props.rows} />
+          <TableBody data={props.rows} tdAttributes={props.tdAttributes} />
         )}
       </Table>
       {totalPage && props.currentPage && props.pageSize && props.total && (

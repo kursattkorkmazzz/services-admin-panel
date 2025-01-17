@@ -2,7 +2,7 @@ import { cva, cx, VariantProps } from "class-variance-authority";
 import { XIcon } from "lucide-react";
 
 const ModalTheme = cva(
-  "fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-40 flex items-center justify-center",
+  "fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-40 flex items-center justify-center z-10",
   {
     variants: {
       status: {
@@ -34,8 +34,10 @@ export default function Modal(props: ModalProps) {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex gap-4 justify-between items-center">
-          {props.header && (
+          {props.header ? (
             <h1 className="text-lg font-medium"> {props.header}</h1>
+          ) : (
+            <div className="w-full h-1"></div>
           )}
 
           {props.onClosebuttonClick && (
